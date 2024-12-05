@@ -23,7 +23,16 @@ export class UsersService {
     }
 
     findOne(id: number) {
-        const user = this.users.filter(user => user.id === id);
+
+        console.log("user filtered");
+        const user = this.users.filter(user => {
+            console.log(user.id);
+            if (user.id === id)
+            return user;
+
+
+        });
+        console.log("i am gonna return this user");
         return user
     }
 
