@@ -1,46 +1,40 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, ParseIntPipe } from '@nestjs/common';
 import { query } from 'express';
 import { get } from 'http';
 import { UsersService } from './users.service';
 @Controller('users')
 export class UsersController {
 
-constructor(private readonly userService:UsersService)
-{
+    constructor(private readonly userService: UsersService) {
 
-}
+    }
     @Get()
-    findAllUsers(@Query('role') role?: "ADMIN"|"INTERN")
-    {
-      return this.userService.findAll(role);
-    }
-    @Get(':id')
-   findOneUser(@Param('id') id:number)
-   {
-return this.userService.findOne(id);
-   }
-    @Get(':id')
-    findSingleUser(@Param('id') id:string)
-    {
-        return {id};
+    findAllUsers(@Query('role') role?: "ADMIN" | "INTERN") {
+
+        return this.userService.findAll(role);
     }
 
- @Post()
- createUser(@Body() user:{})
- {
-return user;
- }
+    @Get(':id')
+    findOneUser(@Param('id',ParseIntPipe) id: number) {
+        console.log("i got this function");
+        return this.userService.findOne(id);
+    }
 
- @Patch(":id")
- updateUser(@Param("id") id:string,@Body() userData:{})
- {
-    return {id,...userData};
- }
 
- @Delete(":id")
-deleteTheUser(@Param("id") myParam:string)
-{
-    return {myParam};
-}
+
+    @Post()
+    createUser(@Body() user: { name: string, email: string, role: "ADMIN" | "INTERN" | "ENGINEER" }) {
+        return this.userService.create(user);
+    }
+
+    @Patch(":id")
+    updateUser(@Param("id",ParseIntPipe) id: number, @Body() userData: { name?: string, email?: string, role?: "ADMIN" | "INTERN" | "ENGINEER" }) {
+        return this.userService.update(id, userData);
+    }
+
+    @Delete(":id")
+    deleteTheUser(@Param("id",ParseIntPipe) myParam: number) {
+        return this.userService.deleteUser(myParam);
+    }
 
 }
